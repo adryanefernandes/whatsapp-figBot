@@ -100,4 +100,20 @@ func main() {
 	whatConn.SetClientVersion(3, 2123, 7)
 
 	onInit(whatConn)
+
+	var numberWhat int
+
+	fmt.Print("Número de whatsapp\nExemplo: 559988525464 \nDigite aqui: ")
+	fmt.Scanln(&numberWhat)
+
+	formatNumber := fmt.Sprintf("%d@s.whatsapp.net", numberWhat)
+
+	text := whatsapp.TextMessage{
+		Info: whatsapp.MessageInfo{
+			RemoteJid: formatNumber,
+		},
+		Text: "Golang Bot What",
+	}
+
+	whatConn.Send(text)
 }
