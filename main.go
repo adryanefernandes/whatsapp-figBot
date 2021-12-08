@@ -11,6 +11,30 @@ import (
 	"github.com/Rhymen/go-whatsapp"
 )
 
+type waHandler struct {
+	c *whatsapp.Conn
+}
+
+func (*waHandler) HandleTextMessage(message whatsapp.TextMessage) {
+	fmt.Printf("%v %v %v %v\n\t%v\n", message.Info.Timestamp, message.Info.Id, message.Info.RemoteJid, message.ContextInfo.QuotedMessageID, message.Text)
+}
+
+func (h *waHandler) HandleError(err error) {
+
+	if e, ok := err.(*whatsapp.ErrConnectionFailed); ok {
+		log.Printf("Connection failed, underlying error: %v", e.Err)
+		log.Println("Waiting 30sec...")
+		<-time.After(30 * time.Second)
+		log.Println("Reconnecting...")
+		err := h.c.Restore()
+		if err != nil {
+			log.Fatalf("Restore failed: %v", err)
+		}
+	} else {
+		log.Printf("error occoured: %v\n", err)
+	}
+}
+
 func onInit(whatConn *whatsapp.Conn) error {
 	var sessionError error = fmt.Errorf("no session")
 
@@ -98,6 +122,7 @@ func main() {
 	}
 	// Para o erro no retorno ummarshall
 	whatConn.SetClientVersion(3, 2123, 7)
+	whatConn.AddHandler(&waHandler{whatConn})
 
 	onInit(whatConn)
 
@@ -112,7 +137,7 @@ func main() {
 		Info: whatsapp.MessageInfo{
 			RemoteJid: formatNumber,
 		},
-		Text: "Golang Bot What",
+		Text: "Bot v1 em golang",
 	}
 
 	whatConn.Send(text)
