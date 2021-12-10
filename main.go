@@ -12,10 +12,16 @@ import (
 )
 
 type waHandler struct {
-	c *whatsapp.Conn
+	c         *whatsapp.Conn
+	startTime uint64
 }
 
-func (*waHandler) HandleTextMessage(message whatsapp.TextMessage) {
+func (wh *waHandler) HandleTextMessage(message whatsapp.TextMessage) {
+	fmt.Println(wh.startTime)
+	if message.Info.Timestamp < wh.startTime {
+		return
+	}
+
 	fmt.Printf("%v %v %v %v\n\t%v\n", message.Info.Timestamp, message.Info.Id, message.Info.RemoteJid, message.ContextInfo.QuotedMessageID, message.Text)
 }
 
@@ -66,6 +72,7 @@ func onInit(whatConn *whatsapp.Conn) error {
 	}
 	return nil
 }
+
 func login(whatConn *whatsapp.Conn) (whatsapp.Session, error) {
 	qrCode := make(chan string)
 	go func() {
@@ -122,11 +129,13 @@ func main() {
 	}
 	// Para o erro no retorno ummarshall
 	whatConn.SetClientVersion(3, 2123, 7)
-	whatConn.AddHandler(&waHandler{whatConn})
+
+	whatConn.AddHandler(&waHandler{whatConn, uint64(time.Now().Unix())})
 
 	onInit(whatConn)
 
-	var numberWhat int
+	/* Envia mensagem */
+	/* var numberWhat int
 
 	fmt.Print("Número de whatsapp\nExemplo: 559988525464 \nDigite aqui: ")
 	fmt.Scanln(&numberWhat)
@@ -141,4 +150,5 @@ func main() {
 	}
 
 	whatConn.Send(text)
+	*/
 }
