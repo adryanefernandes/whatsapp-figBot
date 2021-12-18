@@ -9,6 +9,7 @@ import (
 
 	qrcodeTerminal "github.com/Baozisoftware/qrcode-terminal-go"
 	"github.com/Rhymen/go-whatsapp"
+	"github.com/qgx-pagamentos/whatsapp-figBot/lib"
 )
 
 type waHandler struct {
@@ -18,9 +19,9 @@ type waHandler struct {
 
 func (wh *waHandler) HandleTextMessage(message whatsapp.TextMessage) {
 	fmt.Println(wh.startTime)
-	if message.Info.Timestamp < wh.startTime {
+	/* if message.Info.Timestamp < wh.startTime {
 		return
-	}
+	} */
 
 	fmt.Printf("%v %v %v %v\n\t%v\n", message.Info.Timestamp, message.Info.Id, message.Info.RemoteJid, message.ContextInfo.QuotedMessageID, message.Text)
 }
@@ -132,6 +133,7 @@ func main() {
 
 	whatConn.AddHandler(&waHandler{whatConn, uint64(time.Now().Unix())})
 
+	lib.Print("oi")
 	onInit(whatConn)
 
 	/* Envia mensagem */

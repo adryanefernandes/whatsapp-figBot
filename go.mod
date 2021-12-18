@@ -1,10 +1,13 @@
-module github.com/adryanefernandes/whatsapp-figBot
+module github.com/qgx-pagamentos/whatsapp-figBot
 
 go 1.17
 
 require (
-	github.com/Baozisoftware/qrcode-terminal-go v0.0.0-20170407111555-c0650d8dff0f // indirect
-	github.com/Rhymen/go-whatsapp v0.1.1 // indirect
+	github.com/Baozisoftware/qrcode-terminal-go v0.0.0-20170407111555-c0650d8dff0f
+	github.com/Rhymen/go-whatsapp v0.1.1
+)
+
+require (
 	github.com/golang/protobuf v1.3.0 // indirect
 	github.com/gorilla/websocket v1.4.1 // indirect
 	github.com/mattn/go-colorable v0.1.1 // indirect
